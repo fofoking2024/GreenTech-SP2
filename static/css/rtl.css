@@ -1,0 +1,49 @@
+/* RTL Override Styles for Arabic */
+[dir="rtl"] {
+    font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+    text-align: right;
+}
+
+[dir="rtl"] .user-nav-links {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .flash-container {
+    left: 2rem;
+    right: auto;
+}
+
+[dir="rtl"] .hero-content, 
+[dir="rtl"] .auth-form,
+[dir="rtl"] .step-section,
+[dir="rtl"] .order-meta,
+[dir="rtl"] .request-grid,
+[dir="rtl"] .dashboard-header {
+    text-align: right;
+}
+
+[dir="rtl"] .btn-premium .arrow,
+[dir="rtl"] .tile-link .arrow,
+[dir="rtl"] .btn-outline .arrow {
+    display: inline-block;
+    transform: scaleX(-1); /* Flip arrows */
+}
+
+/* Fix table/grid layouts */
+[dir="rtl"] .radio-group {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .stepper-progress {
+    float: right;
+}
+
+[dir="rtl"] .ml-auto {
+    margin-right: auto;
+    margin-left: 0;
+}
+
+[dir="rtl"] .mr-4 {
+    margin-left: 1rem;
+    margin-right: 0;
+}

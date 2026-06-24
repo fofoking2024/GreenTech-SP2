@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ dir }}">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works - GreenTec</title>
+    
+    <!-- Fonts & CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/design-system.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/rtl.css') }}" />
+    
+    <style>
+        .tutorial-header { padding: 1.5rem 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .logo-group { display: flex; align-items: center; gap: 0.75rem; font-weight: 800; font-size: 1.5rem; text-decoration: none; color: var(--text-main); }
+        .logo-group img { height: 32px; }
+        
+        .hero { padding: 6rem 5%; text-align: center; background: radial-gradient(circle at center, rgba(16, 185, 129, 0.05) 0%, transparent 70%); }
+        .hero h1 { font-size: 3rem; font-weight: 800; margin-bottom: 1rem; }
+        .hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin: 0 auto; line-height: 1.6; }
+        
+        .section { padding: 5rem 5%; }
+        .section-title { text-align: center; font-size: 2.25rem; font-weight: 800; margin-bottom: 3rem; }
+        
+        .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .step-card { padding: 2.5rem; text-align: center; border-radius: var(--radius-lg); background: white; transition: transform 0.3s; position: relative; }
+        .step-card:hover { transform: translateY(-5px); }
+        .step-num { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.25rem; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+        .step-icon { font-size: 3rem; margin-bottom: 1.5rem; }
+        .step-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; }
+        .step-card p { color: var(--text-muted); line-height: 1.6; }
+
+        .ai-feature { display: flex; align-items: center; gap: 4rem; max-width: 1000px; margin: 0 auto; background: white; padding: 3rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-md); }
+        .ai-text { flex: 1; }
+        .ai-text h2 { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; color: var(--primary-dark); }
+        .ai-text p { font-size: 1.1rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; }
+        .ai-visual { flex: 1; font-size: 5rem; text-align: center; background: #f8fafc; padding: 2rem; border-radius: var(--radius-lg); border: 2px dashed #e2e8f0; }
+        
+        .cta-section { text-align: center; padding: 5rem 5%; background: var(--primary-dark); color: white; }
+        .cta-section h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1.5rem; }
+        .cta-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+        .btn-white { background: white; color: var(--primary-dark); padding: 0.875rem 2rem; border-radius: var(--radius-full); font-weight: 700; text-decoration: none; transition: transform 0.2s; }
+        .btn-white:hover { transform: scale(1.05); }
+        .btn-outline-white { border: 2px solid white; color: white; padding: 0.875rem 2rem; border-radius: var(--radius-full); font-weight: 700; text-decoration: none; transition: background 0.2s; }
+        .btn-outline-white:hover { background: rgba(255,255,255,0.1); }
+
+        @media (max-width: 768px) {
+            .ai-feature { flex-direction: column; text-align: center; gap: 2rem; }
+            .hero h1 { font-size: 2.25rem; }
+        }
+    </style>
+</head>
+<body class="bg-main">
+
+    <header class="tutorial-header">
+        <a href="{{ url_for('index') }}" class="logo-group">
+            <img src="{{ url_for('static', filename='icons/logo-green-icon.svg') }}" alt="GreenTec" />
+            <span>GreenTec</span>
+        </a>
+        <div class="lang-switch">
+            {% if lang == 'en' %}
+                <a href="{{ url_for('set_language', lang='ar') }}" class="btn-outline sm">العربية</a>
+            {% else %}
+                <a href="{{ url_for('set_language', lang='en') }}" class="btn-outline sm">English</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="hero animate-fade-in">
+        {% if lang == 'en' %}
+        <h1>How GreenTec Works</h1>
+        <p>A simple, secure, and rewarding way to recycle your electronic waste and protect the environment.</p>
+        {% else %}
+        <h1>كيف تعمل منصة جرين تك</h1>
+        <p>طريقة بسيطة وآمنة ومجزية لإعادة تدوير نفاياتك الإلكترونية وحماية البيئة.</p>
+        {% endif %}
+    </div>
+
+    <div class="section bg-main">
+        {% if lang == 'en' %}
+        <h2 class="section-title">The Recycling Journey</h2>
+        {% else %}
+        <h2 class="section-title">رحلة إعادة التدوير</h2>
+        {% endif %}
+        
+        <div class="steps-grid">
+            <!-- Step 1 -->
+            <div class="step-card premium-shadow">
+                <div class="step-num">1</div>
+                <div class="step-icon">👤</div>
+                {% if lang == 'en' %}
+                <h3>Create an Account</h3>
+                <p>Register as a user to start your journey. It only takes a minute to join our green community.</p>
+                {% else %}
+                <h3>إنشاء حساب</h3>
+                <p>سجل كمستخدم لتبدأ رحلتك. يستغرق الانضمام لمجتمعنا الأخضر دقيقة واحدة فقط.</p>
+                {% endif %}
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-card premium-shadow">
+                <div class="step-num">2</div>
+                <div class="step-icon">📦</div>
+                {% if lang == 'en' %}
+                <h3>Submit Devices</h3>
+                <p>Choose a certified recycling partner, select a drop-off point, and list the devices you want to recycle.</p>
+                {% else %}
+                <h3>تسليم الأجهزة</h3>
+                <p>اختر شريكاً معتمداً، وحدد نقطة التسليم، وأدرج الأجهزة التي ترغب في إعادة تدويرها.</p>
+                {% endif %}
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-card premium-shadow">
+                <div class="step-num">3</div>
+                <div class="step-icon">♻️</div>
+                {% if lang == 'en' %}
+                <h3>Track & Recycle</h3>
+                <p>Drop off your items and track their status in real-time until they are successfully recycled.</p>
+                {% else %}
+                <h3>التتبع وإعادة التدوير</h3>
+                <p>سلم أغراضك وتتبع حالتها في الوقت الفعلي حتى يتم إعادة تدويرها بنجاح.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="ai-feature">
+            <div class="ai-text">
+                {% if lang == 'en' %}
+                <h2>Powered by AI 🤖</h2>
+                <p>Not sure what category your device falls into? Our built-in Smart Assistant automatically classifies your electronics, predicts recyclability, and provides specific safety instructions (like removing batteries or data wiping) before you drop them off.</p>
+                <ul style="list-style: none; padding: 0; line-height: 2;">
+                    <li>✅ Instant classification</li>
+                    <li>✅ Recyclability assessment</li>
+                    <li>✅ Pre-recycling safety tips</li>
+                </ul>
+                {% else %}
+                <h2>مدعوم بالذكاء الاصطناعي 🤖</h2>
+                <p>لست متأكداً من فئة جهازك؟ يقوم المساعد الذكي المدمج لدينا بتصنيف إلكترونياتك تلقائياً، ويتنبأ بقابلية إعادة التدوير، ويقدم إرشادات أمان محددة (مثل إزالة البطاريات أو مسح البيانات) قبل تسليمها.</p>
+                <ul style="list-style: none; padding: 0; line-height: 2;">
+                    <li>✅ تصنيف فوري</li>
+                    <li>✅ تقييم قابلية إعادة التدوير</li>
+                    <li>✅ نصائح أمان ما قبل التدوير</li>
+                </ul>
+                {% endif %}
+            </div>
+            <div class="ai-visual">
+                📱 ➡️ ♻️
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-section">
+        {% if lang == 'en' %}
+        <h2>Ready to Make an Impact?</h2>
+        <p>Join thousands of users and companies working together for a greener future.</p>
+        <div class="cta-buttons">
+            <a href="{{ url_for('auth.user_reg') }}" class="btn-white">Join as User</a>
+            <a href="{{ url_for('auth.company_reg') }}" class="btn-outline-white">Register Company</a>
+            <a href="{{ url_for('auth.user_login') }}" class="btn-outline-white" style="border:none; text-decoration: underline;">Login</a>
+        </div>
+        {% else %}
+        <h2>مستعد لإحداث فرق؟</h2>
+        <p>انضم لآلاف المستخدمين والشركات الذين يعملون معاً من أجل مستقبل أكثر خضرة.</p>
+        <div class="cta-buttons">
+            <a href="{{ url_for('auth.user_reg') }}" class="btn-white">انضم كمستخدم</a>
+            <a href="{{ url_for('auth.company_reg') }}" class="btn-outline-white">تسجيل شركة</a>
+            <a href="{{ url_for('auth.user_login') }}" class="btn-outline-white" style="border:none; text-decoration: underline;">دخول</a>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>

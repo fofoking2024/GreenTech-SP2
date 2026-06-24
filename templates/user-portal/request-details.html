@@ -1,0 +1,143 @@
+{% extends "user-portal/base-user.html" %}
+
+{% block title %}Order #{{ order.id }} - GreenTec{% endblock %}
+
+{% block back_button %}
+<nav class="page-back-nav">
+    <a href="{{ url_for('user.request_history') }}" class="btn-back" onclick="if(history.length>1){history.back();return false;}">
+        <span class="back-arrow">&#8592;</span>
+        {{ t('nav.back') }}
+    </a>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-header animate-fade-in">
+    <div class="header-main">
+        <h1>{{ t('det.title') }} #{{ order.id }}</h1>
+        <p class="text-muted">{{ t('hist.desc') }}</p>
+    </div>
+    <div class="order-status-badge {{ order.status }}">
+        {{ order.status|title }}
+    </div>
+</div>
+
+<div class="details-layout animate-fade-in" style="animation-delay: 0.1s">
+    <div class="main-content">
+        <!-- Status Timeline -->
+        <div class="detail-card glass premium-shadow mb-8">
+            <div class="card-header">
+                <h3>{{ t('det.timeline') }}</h3>
+            </div>
+            <div class="timeline">
+                {% if not history %}
+                <p class="text-muted p-8">No updates yet. Your request has been received.</p>
+                {% else %}
+                {% for h in history %}
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-status">{{ h.status }}</span>
+                        <span class="timeline-date">{{ h.updated_at.strftime("%B %d, %Y - %H:%M") }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Device Summary -->
+        <div class="detail-card glass premium-shadow">
+            <div class="card-header">
+                <h3>{{ t('det.dev_list') }}</h3>
+            </div>
+            <div class="device-list">
+                {% for device in devices %}
+                <div class="device-row">
+                    <div class="device-icon">📦</div>
+                    <div class="device-details">
+                        <span class="device-name">{{ device.type }}</span>
+                        <span class="device-condition">{{ device.condition }}</span>
+                    </div>
+                    <div class="device-qty">x{{ device.quantity }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="side-content">
+        <!-- Partner Card -->
+        <div class="detail-card glass premium-shadow mb-8 highlight">
+            <div class="card-header">
+                <h3>{{ t('det.comp') }}</h3>
+            </div>
+            <div class="partner-info">
+                <div class="partner-header">
+                    <div class="partner-avatar">🏢</div>
+                    <span class="partner-name">{{ company_name }}</span>
+                </div>
+                <div class="point-info">
+                    <span class="label">{{ t('hist.col_point') }}</span>
+                    <p class="point-name">{{ order.collection_point }}</p>
+                    <a href="{{ order.collection_address }}" target="_blank" class="btn-outline sm mt-4 block text-center">View on Maps</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-card">
+            <p>Need help? Contact the recycling company directly via their portal or visit the collection point during business hours.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; }
+    
+    .order-status-badge { padding: 0.75rem 1.5rem; border-radius: 999px; font-weight: 700; text-transform: uppercase; font-size: 0.875rem; }
+    .order-status-badge.received { background: #dbeafe; color: #1e40af; }
+    .order-status-badge.under-recycling { background: #fef3c7; color: #92400e; }
+    .order-status-badge.recycled { background: #dcfce7; color: #166534; }
+
+    .details-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+    .detail-card { border-radius: var(--radius-lg); overflow: hidden; }
+    .card-header { padding: 1.5rem 2rem; background: rgba(241, 245, 249, 0.5); border-bottom: 1px solid #f1f5f9; }
+    .card-header h3 { font-size: 1.1rem; font-weight: 700; }
+
+    .timeline { padding: 2rem; }
+    .timeline-item { display: flex; gap: 1.5rem; position: relative; padding-bottom: 2rem; }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-item:not(:last-child)::after { content: ''; position: absolute; left: 7px; top: 20px; bottom: 0; width: 2px; background: #e2e8f0; }
+    .timeline-marker { width: 16px; height: 16px; border-radius: 50%; background: var(--primary); border: 3px solid white; box-shadow: 0 0 0 2px var(--primary); z-index: 1; margin-top: 4px; }
+    .timeline-content { display: flex; flex-direction: column; }
+    .timeline-status { font-weight: 700; color: var(--text-main); }
+    .timeline-date { font-size: 0.8rem; color: var(--text-muted); }
+
+    .device-list { padding: 1.5rem 2rem; }
+    .device-row { display: flex; align-items: center; gap: 1.5rem; padding: 1rem 0; border-bottom: 1px solid #f1f5f9; }
+    .device-row:last-child { border-bottom: none; }
+    .device-icon { font-size: 1.5rem; background: #f8fafc; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
+    .device-details { flex-grow: 1; display: flex; flex-direction: column; }
+    .device-name { font-weight: 700; }
+    .device-condition { font-size: 0.8rem; color: var(--text-muted); }
+    .device-qty { font-weight: 800; font-size: 1.25rem; color: var(--primary); }
+
+    .partner-info { padding: 2rem; }
+    .partner-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+    .partner-avatar { width: 50px; height: 50px; background: var(--green-50); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .partner-name { font-weight: 700; font-size: 1.1rem; }
+    .point-info .label { display: block; font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase; }
+    .point-name { font-weight: 700; font-size: 1.1rem; }
+
+    .info-card { padding: 1.5rem; background: #f1f5f9; border-radius: var(--radius-md); font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; }
+    .highlight { border: 2px solid var(--primary); }
+    .mt-4 { margin-top: 1rem; }
+    .block { display: block; }
+    .mb-8 { margin-bottom: 2rem; }
+
+    @media (max-width: 992px) {
+        .details-layout { grid-template-columns: 1fr; }
+        .dashboard-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    }
+</style>
+{% endblock %}

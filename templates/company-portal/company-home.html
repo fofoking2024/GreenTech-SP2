@@ -1,0 +1,192 @@
+{% extends "company-portal/base-company.html" %}
+
+{% block back_button %}
+<nav class="page-back-nav">
+    <a href="{{ url_for('index') }}" class="btn-back" onclick="if(history.length>1){history.back();return false;}">
+        <span class="back-arrow">&#8592;</span>
+        {{ t('nav.back') }}
+    </a>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-header animate-fade-in">
+    <div class="header-main">
+        <h1>{{ t('comp.welcome') }} <span class="text-primary">{{ company_name }}</span></h1>
+        <p class="text-muted">{{ t('comp.desc') }}</p>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('reports.reports') }}" class="btn-premium">
+            <span>{{ t('comp.gen_rep') }}</span>
+        </a>
+    </div>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid animate-fade-in" style="animation-delay: 0.1s">
+    <div class="stat-card glass premium-shadow">
+        <div class="stat-icon orange">
+            <span>🗂️</span>
+        </div>
+        <div class="stat-info">
+            <span class="stat-value text-orange">{{ new_requests }}</span>
+            <span class="stat-label">{{ t('comp.new_req') }}</span>
+        </div>
+    </div>
+
+    <div class="stat-card glass premium-shadow">
+        <div class="stat-icon blue">
+            <span>📦</span>
+        </div>
+        <div class="stat-info">
+            <span class="stat-value text-blue">{{ total_orders }}</span>
+            <span class="stat-label">{{ t('user.total_req') }}</span>
+        </div>
+    </div>
+
+    <div class="stat-card glass premium-shadow">
+        <div class="stat-icon purple">
+            <img src="{{ url_for('static', filename='icons/location-purple-icon.svg') }}" alt="" />
+        </div>
+        <div class="stat-info">
+            <span class="stat-value text-purple">{{ collection_points }}</span>
+            <span class="stat-label">{{ t('comp.active_pts') }}</span>
+        </div>
+    </div>
+
+    <div class="stat-card glass premium-shadow">
+        <div class="stat-icon green">
+            <img src="{{ url_for('static', filename='icons/recycle-green-icon.svg') }}" alt="" />
+        </div>
+        <div class="stat-info">
+            <span class="stat-value text-green">{{ devices_recycled }}</span>
+            <span class="stat-label">{{ t('user.dev_recycled') }}</span>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="action-grid animate-fade-in" style="animation-delay: 0.2s">
+    <a href="{{ url_for('company.recycling_requests') }}" class="action-tile glass">
+        <div class="tile-icon orange">📋</div>
+        <h3>{{ t('comp.mng_req') }}</h3>
+        <p>{{ t('comp.mng_req_desc') }}</p>
+        <span class="tile-link">{{ t('comp.go_orders') }}</span>
+    </a>
+
+    <a href="{{ url_for('company.collection_points') }}" class="action-tile glass">
+        <div class="tile-icon purple">📍</div>
+        <h3>{{ t('comp.col_pts') }}</h3>
+        <p>{{ t('comp.col_pts_desc') }}</p>
+        <span class="tile-link">{{ t('comp.mng_loc') }}</span>
+    </a>
+
+    <a href="{{ url_for('company.statistics') }}" class="action-tile glass">
+        <div class="tile-icon blue">📊</div>
+        <h3>{{ t('comp.analytics') }}</h3>
+        <p>{{ t('comp.analytics_desc') }}</p>
+        <span class="tile-link">{{ t('comp.view_stats') }}</span>
+    </a>
+</div>
+
+<!-- Danger Zone -->
+<div class="danger-zone animate-fade-in" style="animation-delay: 0.3s; margin-top: 4rem; padding-top: 3rem; border-top: 2px dashed #fca5a5;">
+    <h3 style="color: #ef4444; margin-bottom: 0.5rem; font-weight: 800; font-size: 1.5rem;">⚠️ {{ t('comp.danger_zone') }}</h3>
+    <p class="text-muted" style="margin-bottom: 1.5rem;">{{ t('comp.reset_desc') }}</p>
+    
+    <form action="{{ url_for('company.reset_data') }}" method="POST" onsubmit="return confirm('{{ t('comp.reset_confirm') }}');">
+        <button type="submit" class="btn-outline sm warn" style="border-color: #ef4444; color: #ef4444;">
+            {{ t('comp.reset_data') }}
+        </button>
+    </form>
+</div>
+
+<style>
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 3rem;
+        gap: 1.5rem;
+    }
+    .dashboard-header h1 { font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem; }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+    .stat-card {
+        padding: 1.5rem;
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        transition: transform 0.3s;
+    }
+    .stat-card:hover { transform: translateY(-5px); }
+    .stat-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    .stat-icon img { width: 28px; height: 28px; }
+    .stat-icon.orange { background: #ffedd5; }
+    .stat-icon.blue { background: #dbeafe; }
+    .stat-icon.purple { background: #f3e8ff; }
+    .stat-icon.green { background: #dcfce7; }
+    
+    .stat-value { display: block; font-size: 1.75rem; font-weight: 800; line-height: 1; margin-bottom: 0.25rem; }
+    .text-orange { color: #f97316; }
+    .text-blue { color: #3b82f6; }
+    .text-purple { color: #a855f7; }
+    .text-green { color: #10b981; }
+    .stat-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+    }
+    .action-tile {
+        padding: 2.5rem;
+        border-radius: var(--radius-xl);
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.3s;
+        border: 1px solid transparent;
+    }
+    .action-tile:hover {
+        background: white;
+        border-color: var(--primary);
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-lg);
+    }
+    .tile-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .tile-icon.orange { background: #ffedd5; }
+    .tile-icon.purple { background: #f3e8ff; }
+    .tile-icon.blue { background: #dbeafe; }
+    
+    .action-tile h3 { font-size: 1.5rem; margin-bottom: 0.75rem; font-weight: 700; }
+    .action-tile p { color: var(--text-muted); margin-bottom: 1.5rem; }
+    .tile-link { font-weight: 700; color: var(--primary); }
+
+    @media (max-width: 768px) {
+        .dashboard-header { flex-direction: column; text-align: center; align-items: center; }
+    }
+</style>
+{% endblock %}

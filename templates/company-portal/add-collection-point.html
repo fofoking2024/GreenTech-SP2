@@ -1,0 +1,65 @@
+{% extends "company-portal/base-company.html" %}
+
+{% block title %}Add Collection Point - GreenTec{% endblock %}
+
+{% block back_button %}
+<nav class="page-back-nav">
+    <a href="{{ url_for('company.collection_points') }}" class="btn-back" onclick="if(history.length>1){history.back();return false;}">
+        <span class="back-arrow">&#8592;</span>
+        {{ t('nav.back') }}
+    </a>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header animate-fade-in">
+    <div class="header-main">
+        <h1>{{ t('pts.add_title') }}</h1>
+        <p class="text-muted">{{ t('pts.add_desc') }}</p>
+    </div>
+</div>
+
+<div class="form-container animate-fade-in" style="animation-delay: 0.1s">
+    <div class="form-card glass premium-shadow">
+        {% if error %}
+        <div class="error-box">{{ error }}</div>
+        {% endif %}
+
+        <form class="premium-form" method="POST" action="{{ url_for('company.add_collection_point') }}">
+            <div class="form-group">
+                <label>{{ t('pts.loc_name') }}</label>
+                <input type="text" name="name" placeholder="{{ t('pts.loc_ph') }}" required />
+            </div>
+
+            <div class="form-group">
+                <label>{{ t('pts.map_url') }}</label>
+                <input type="url" name="address" placeholder="{{ t('pts.map_ph') }}" required />
+            </div>
+
+            <div class="form-footer">
+                <a href="{{ url_for('company.collection_points') }}" class="btn-outline">{{ t('pts.btn_save') }}</a>
+                <button type="submit" class="btn-premium">{{ t('pts.btn_add') }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .form-container { max-width: 600px; margin: 0 auto; }
+    .form-card { padding: 3rem; border-radius: var(--radius-xl); }
+    
+    .premium-form .form-group { margin-bottom: 2rem; }
+    .premium-form label { display: block; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .premium-form input {
+        width: 100%; padding: 1rem; border-radius: var(--radius-md); border: 2px solid #f1f5f9; background: #f8fafc;
+        transition: all 0.3s;
+    }
+    .premium-form input:focus { outline: none; border-color: var(--primary); background: white; }
+    .help-text { display: block; margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted); }
+
+    .form-footer { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #f1f5f9; }
+    .btn-outline { padding: 0.75rem 1.5rem; border: 2px solid #e2e8f0; color: var(--text-muted); border-radius: var(--radius-md); text-decoration: none; font-weight: 600; transition: all 0.3s; }
+    .btn-outline:hover { background: #f8fafc; border-color: #cbd5e1; }
+</style>
+{% endblock %}

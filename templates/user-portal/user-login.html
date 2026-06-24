@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ dir }}">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - GreenTec</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/design-system.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/rtl.css') }}" />
+</head>
+<body class="bg-main">
+
+    <div class="auth-container animate-fade-in">
+        <div class="auth-card glass premium-shadow">
+            <div class="auth-header">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <a href="{{ url_for('index') }}">
+                        <img src="{{ url_for('static', filename='icons/logo-green-icon.svg') }}" alt="GreenTec" class="auth-logo" style="margin: 0" />
+                    </a>
+                    {% if lang == 'en' %}
+                        <a href="{{ url_for('set_language', lang='ar') }}" class="btn-outline sm">العربية</a>
+                    {% else %}
+                        <a href="{{ url_for('set_language', lang='en') }}" class="btn-outline sm">English</a>
+                    {% endif %}
+                </div>
+                <h1 class="brand-font">{{ t('auth.login_title') }}</h1>
+                <p class="text-muted">{{ t('auth.login_sub') }}</p>
+            </div>
+
+            {% if error %}
+            <div class="error-box">{{ error }}</div>
+            {% endif %}
+
+            <form class="auth-form" method="POST" action="{{ url_for('auth.user_login') }}">
+                <div class="form-group">
+                    <label>{{ t('auth.email') }}</label>
+                    <input type="email" name="email" placeholder="name@example.com" required />
+                </div>
+
+                <div class="form-group">
+                    <label>{{ t('auth.pass') }}</label>
+                    <input type="password" name="password" placeholder="••••••••" required />
+                </div>
+
+                <button type="submit" class="btn-premium w-full">{{ t('auth.btn_in') }}</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>{{ t('auth.no_acc') }} <a href="{{ url_for('auth.user_reg') }}">{{ t('auth.reg_here') }}</a></p>
+                <p class="mt-4"><a href="{{ url_for('auth.company_login') }}" class="text-muted">{{ t('auth.log_cmp') }}</a></p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 440px;
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+        }
+        .auth-header { margin-bottom: 2.5rem; }
+        .auth-logo { height: 48px; margin-bottom: 1.5rem; }
+        .auth-header h1 { font-size: 1.875rem; font-weight: 700; margin-bottom: 0.5rem; }
+        
+        .error-box {
+            padding: 0.75rem;
+            background: #fee2e2;
+            color: #ef4444;
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .auth-form { text-align: left; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-main); }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            transition: all 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            background: white;
+        }
+        .w-full { width: 100%; justify-content: center; margin-top: 1rem; }
+        
+        .auth-footer { margin-top: 2rem; font-size: 0.875rem; color: var(--text-muted); }
+        .auth-footer a { color: var(--primary); font-weight: 600; text-decoration: none; }
+        .mt-4 { margin-top: 1rem; }
+    </style>
+
+</body>
+</html>

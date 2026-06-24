@@ -1,0 +1,112 @@
+{% extends "company-portal/base-company.html" %}
+
+{% block title %}{{ t('pts.title') }} - GreenTec{% endblock %}
+
+{% block back_button %}
+<nav class="page-back-nav">
+    <a href="{{ url_for('company.company_home') }}" class="btn-back" onclick="if(history.length>1){history.back();return false;}">
+        <span class="back-arrow">&#8592;</span>
+        {{ t('nav.back') }}
+    </a>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header animate-fade-in">
+    <div class="header-main">
+        <h1>{{ t('pts.title') }}</h1>
+        <p class="text-muted">{{ t('pts.desc') }}</p>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('company.add_collection_point') }}" class="btn-premium">
+            <span>{{ t('pts.add') }}</span>
+        </a>
+    </div>
+</div>
+
+<div class="points-container animate-fade-in" style="animation-delay: 0.1s">
+    {% if not points %}
+    <div class="empty-state glass">
+        <div class="empty-icon">📍</div>
+        <h2>{{ t('pts.empty_title') }}</h2>
+        <p>{{ t('pts.empty_desc') }}</p>
+        <a href="{{ url_for('company.add_collection_point') }}" class="btn-premium">{{ t('pts.add_first') }}</a>
+    </div>
+    {% else %}
+    <div class="points-grid">
+        {% for point in points %}
+        <div class="point-card glass premium-shadow">
+            <div class="point-header">
+                <div class="point-title-group">
+                    <h3 class="point-name">{{ point.name }}</h3>
+                    <div class="point-status-badge {{ point.status }}">
+                        {{ t('pts.' + point.status) }}
+                    </div>
+                </div>
+                <div class="point-stats">
+                    <span class="stat-pill">{{ point.requests_count }} {{ t('pts.orders') }}</span>
+                </div>
+            </div>
+
+            <div class="point-body">
+                <div class="point-address">
+                    <span class="label">{{ t('pts.map_link') }}</span>
+                    <a href="{{ point.address }}" target="_blank" class="address-link">{{ point.address }}</a>
+                </div>
+            </div>
+
+            <div class="point-actions">
+                <div class="action-group">
+                    <a href="{{ url_for('company.edit_collection_point', point_id=point.id) }}" class="btn-icon-text">
+                        <span>{{ t('pts.edit') }}</span>
+                    </a>
+                    <form action="{{ url_for('company.toggle_collection_point', point_id=point.id) }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn-icon-text {% if point.status == 'active' %}text-orange{% else %}text-green{% endif %}">
+                            <span>{% if point.status == 'active' %}{{ t('pts.deactivate') }}{% else %}{{ t('pts.activate') }}{% endif %}</span>
+                        </button>
+                    </form>
+                </div>
+                <form action="{{ url_for('company.delete_collection_point', point_id=point.id) }}" method="POST" onsubmit="return confirm('{{ t('pts.confirm_delete') }}');">
+                    <button type="submit" class="btn-delete">{{ t('pts.delete') }}</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+    
+    .points-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
+    .point-card { padding: 2rem; border-radius: var(--radius-lg); display: flex; flex-direction: column; transition: all 0.3s; }
+    .point-card:hover { transform: translateY(-5px); }
+    
+    .point-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+    .point-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+    
+    .point-status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+    .point-status-badge.active { background: #dcfce7; color: #166534; }
+    .point-status-badge.inactive { background: #fee2e2; color: #991b1b; }
+    
+    .stat-pill { background: #f1f5f9; padding: 0.25rem 0.75rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }
+    
+    .point-body { flex-grow: 1; margin-bottom: 2rem; }
+    .point-address .label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; }
+    .address-link { color: var(--primary); font-size: 0.875rem; text-decoration: none; word-break: break-all; font-weight: 500; }
+    .address-link:hover { text-decoration: underline; }
+
+    .point-actions { display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid #f1f5f9; }
+    .action-group { display: flex; gap: 1rem; }
+    
+    .btn-icon-text { border: none; background: none; font-weight: 600; font-size: 0.875rem; color: var(--text-muted); cursor: pointer; text-decoration: none; transition: color 0.3s; }
+    .btn-icon-text:hover { color: var(--primary); }
+    .text-orange { color: #f97316 !important; }
+    .text-green { color: var(--primary) !important; }
+    
+    .btn-delete { border: none; background: none; color: #ef4444; font-weight: 600; font-size: 0.875rem; cursor: pointer; transition: opacity 0.3s; }
+    .btn-delete:hover { opacity: 0.7; }
+</style>
+{% endblock %}

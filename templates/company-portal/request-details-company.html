@@ -1,0 +1,153 @@
+{% extends "company-portal/base-company.html" %}
+
+{% block title %}{{ t('det.title') }} - GreenTec{% endblock %}
+
+{% block back_button %}
+<nav class="page-back-nav">
+    <a href="{{ url_for('company.recycling_requests') }}" class="btn-back" onclick="if(history.length>1){history.back();return false;}">
+        <span class="back-arrow">&#8592;</span>
+        {{ t('nav.back') }}
+    </a>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-header animate-fade-in">
+    <div class="header-main">
+        <h1>{{ t('mng.det_title') }} #{{ request_data.id }}</h1>
+        <p class="text-muted">{{ t('mng.desc') }}</p>
+    </div>
+</div>
+
+<div class="details-grid animate-fade-in" style="animation-delay: 0.1s">
+    <!-- Main Info -->
+    <div class="main-column">
+        <div class="detail-card glass premium-shadow mb-8">
+            <div class="card-header">
+                <h3>{{ t('det.dev_list') }}</h3>
+            </div>
+            <div class="device-list">
+                {% for device in devices %}
+                <div class="device-item">
+                    <div class="device-icon">💻</div>
+                    <div class="device-info">
+                        <span class="device-type">{{ device.type }}</span>
+                        <span class="device-condition">{{ t('det.cond') }}: {{ device.condition or t('det.not_spec') }}</span>
+                    </div>
+                    <div class="device-qty">x{{ device.quantity }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="detail-card glass premium-shadow">
+            <div class="card-header">
+                <h3>{{ t('mng.cust_info') }}</h3>
+            </div>
+            <div class="user-info-grid">
+                <div class="info-item">
+                    <span class="label">{{ t('mng.name') }}</span>
+                    <span class="value">{{ request_data.user_name }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">{{ t('mng.email') }}</span>
+                    <span class="value">{{ request_data.user_email }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">{{ t('mng.phone') }}</span>
+                    <span class="value">{{ request_data.user_phone or t('mng.not_prov') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar: Status & Location -->
+    <div class="side-column">
+        <div class="detail-card glass premium-shadow mb-8 highlight-border">
+            <div class="card-header">
+                <h3>{{ t('mng.upd_status') }}</h3>
+            </div>
+            <div class="current-status-box {{ request_data.status }}">
+                {{ t('mng.cur_status') }}: {{ request_data.status|title }}
+            </div>
+            
+            <form action="{{ url_for('company.update_request_status', request_id=request_data.id) }}" method="POST" class="status-form">
+                <div class="form-group">
+                    <label>{{ t('mng.move_to') }}</label>
+                    <select name="new_status" class="form-select-premium" required>
+                        <option value="">-- {{ t('mng.select') }} --</option>
+                        {% if request_data.status == 'received' %}
+                        <option value="under-recycling">{{ t('mng.stat_under') }}</option>
+                        {% elif request_data.status == 'under-recycling' %}
+                        <option value="recycled">{{ t('mng.stat_recycled') }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+                {% if request_data.status != 'recycled' %}
+                <button type="submit" class="btn-premium w-full">{{ t('mng.btn_update') }}</button>
+                {% else %}
+                <div class="completed-msg">{{ t('mng.completed') }}</div>
+                {% endif %}
+            </form>
+        </div>
+
+        <div class="detail-card glass premium-shadow">
+            <div class="card-header">
+                <h3>Collection Info</h3>
+            </div>
+            <div class="location-box">
+                <span class="label">Assigned Point</span>
+                <span class="value">{{ request_data.collection_point }}</span>
+                <a href="{{ request_data.collection_address }}" target="_blank" class="btn-outline sm mt-4 block text-center">Open Map Link</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .details-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+    
+    .detail-card { border-radius: var(--radius-lg); overflow: hidden; }
+    .card-header { padding: 1.5rem 2rem; background: rgba(241, 245, 249, 0.5); border-bottom: 1px solid #f1f5f9; }
+    .card-header h3 { font-size: 1.125rem; font-weight: 700; }
+    
+    .device-list { padding: 1.5rem 2rem; }
+    .device-item { display: flex; align-items: center; gap: 1.5rem; padding: 1rem 0; border-bottom: 1px solid #f1f5f9; }
+    .device-item:last-child { border-bottom: none; }
+    .device-icon { font-size: 1.5rem; background: #f8fafc; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
+    .device-info { flex-grow: 1; display: flex; flex-direction: column; }
+    .device-type { font-weight: 700; color: var(--text-main); }
+    .device-condition { font-size: 0.8rem; color: var(--text-muted); }
+    .device-qty { font-weight: 800; font-size: 1.25rem; color: var(--primary); }
+
+    .user-info-grid { padding: 2rem; display: grid; gap: 1.5rem; }
+    .info-item .label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.25rem; }
+    .info-item .value { font-weight: 600; color: var(--text-main); font-size: 1.1rem; }
+
+    .mb-8 { margin-bottom: 2rem; }
+    .highlight-border { border: 2px solid var(--primary); }
+    
+    .current-status-box { margin: 1.5rem 2rem; padding: 1rem; border-radius: var(--radius-md); text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.875rem; }
+    .current-status-box.received { background: #dbeafe; color: #1e40af; }
+    .current-status-box.under-recycling { background: #fef3c7; color: #92400e; }
+    .current-status-box.recycled { background: #dcfce7; color: #166534; }
+
+    .status-form { padding: 0 2rem 2rem; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; font-weight: 700; font-size: 0.8rem; margin-bottom: 0.5rem; }
+    .form-select-premium { width: 100%; padding: 0.75rem; border-radius: var(--radius-md); border: 1px solid #e2e8f0; background: #f8fafc; }
+    
+    .completed-msg { text-align: center; padding: 1rem; color: var(--primary); font-weight: 700; border: 1px dashed var(--primary); border-radius: var(--radius-md); }
+    
+    .location-box { padding: 2rem; }
+    .location-box .label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .location-box .value { font-weight: 700; font-size: 1.25rem; }
+    .mt-4 { margin-top: 1rem; }
+    .block { display: block; }
+    .w-full { width: 100%; justify-content: center; }
+
+    @media (max-width: 992px) {
+        .details-grid { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}

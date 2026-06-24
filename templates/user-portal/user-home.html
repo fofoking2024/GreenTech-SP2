@@ -1,0 +1,146 @@
+{% extends "user-portal/base-user.html" %}
+
+{% block back_button %}
+<nav class="page-back-nav">
+    <a href="{{ url_for('index') }}" class="btn-back" onclick="if(history.length>1){history.back();return false;}">
+        <span class="back-arrow">&#8592;</span>
+        {{ t('nav.back') }}
+    </a>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-header animate-fade-in">
+    <div class="header-main">
+        <h1>{{ t('user.welcome') }} <span class="text-primary">{{ username }}</span>!</h1>
+        <p class="text-muted">{{ t('user.recycled_msg_1') }} <b>{{ devices_recycled }}</b> {{ t('user.recycled_msg_2') }}</p>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('user.device_registration') }}" class="btn-premium">
+            <span>{{ t('user.new_req_btn') }}</span>
+        </a>
+    </div>
+</div>
+
+<!-- Impact Stats Grid -->
+<div class="stats-grid animate-fade-in" style="animation-delay: 0.1s">
+    <div class="stat-card premium-shadow glass">
+        <div class="stat-icon green">
+            <img src="{{ url_for('static', filename='icons/leaf-green-icon.svg') }}" alt="" />
+        </div>
+        <div class="stat-info">
+            <span class="stat-value">{{ total_orders }}</span>
+            <span class="stat-label">{{ t('user.total_req') }}</span>
+        </div>
+    </div>
+
+    <div class="stat-card premium-shadow glass">
+        <div class="stat-icon blue">
+            <img src="{{ url_for('static', filename='icons/recycle-blue-icon.svg') }}" alt="" />
+        </div>
+        <div class="stat-info">
+            <span class="stat-value">{{ devices_recycled }}</span>
+            <span class="stat-label">{{ t('user.dev_recycled') }}</span>
+        </div>
+    </div>
+
+    <div class="stat-card premium-shadow glass">
+        <div class="stat-icon gold">
+            <img src="{{ url_for('static', filename='icons/company-green-icon.svg') }}" alt="" />
+        </div>
+        <div class="stat-info">
+            <span class="stat-value">{{ completed_orders }}</span>
+            <span class="stat-label">{{ t('user.completed_ord') }}</span>
+        </div>
+    </div>
+</div>
+
+<!-- Main Actions -->
+<div class="dashboard-sections animate-fade-in" style="animation-delay: 0.2s">
+    <div class="action-section glass premium-shadow">
+        <div class="section-image">
+            <img src="{{ url_for('static', filename='images/recycling-bins.png') }}" alt="Recycle" style="max-height: 200px; width: auto;" />
+        </div>
+        <div class="section-content">
+            <h2>{{ t('user.ready_next') }}</h2>
+            <p>{{ t('user.ready_desc') }}</p>
+            <div class="section-buttons">
+                <a href="{{ url_for('user.device_registration') }}" class="btn-premium">{{ t('user.start_req') }}</a>
+                <a href="{{ url_for('user.request_history') }}" class="btn-outline">{{ t('user.view_hist') }}</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+    .dashboard-header h1 { font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem; }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+    .stat-card {
+        padding: 2rem;
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        transition: transform 0.3s;
+    }
+    .stat-card:hover { transform: translateY(-5px); }
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .stat-icon img { width: 30px; height: 30px; }
+    .stat-icon.green { background: #dcfce7; }
+    .stat-icon.blue { background: #dbeafe; }
+    .stat-icon.gold { background: #fef3c7; }
+    
+    .stat-value { display: block; font-size: 1.875rem; font-weight: 800; line-height: 1; margin-bottom: 0.25rem; }
+    .stat-label { font-size: 0.875rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    
+    .action-section {
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+        padding: 3rem;
+        border-radius: var(--radius-xl);
+        background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+    }
+    .section-content h2 { font-size: 1.75rem; margin-bottom: 1rem; font-weight: 700; }
+    .section-content p { margin-bottom: 2rem; color: var(--text-muted); font-size: 1.1rem; }
+    .section-buttons { display: flex; gap: 1rem; }
+    
+    .btn-outline {
+        padding: 0.75rem 1.5rem;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    .btn-outline:hover { background: var(--green-50); }
+
+    @media (max-width: 768px) {
+        .action-section { flex-direction: column; text-align: center; padding: 2rem; }
+        .section-buttons { justify-content: center; }
+        .dashboard-header { text-align: center; justify-content: center; }
+    }
+</style>
+{% endblock %}

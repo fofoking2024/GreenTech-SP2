@@ -1,0 +1,99 @@
+{% extends "company-portal/base-company.html" %}
+
+{% block title %}Recycling Requests - GreenTec{% endblock %}
+
+{% block back_button %}
+<nav class="page-back-nav">
+    <a href="{{ url_for('company.company_home') }}" class="btn-back" onclick="if(history.length>1){history.back();return false;}">
+        <span class="back-arrow">&#8592;</span>
+        {{ t('nav.back') }}
+    </a>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header animate-fade-in">
+    <div class="header-main">
+        <h1>{{ t('mng.title') }}</h1>
+        <p class="text-muted">{{ t('mng.desc') }}</p>
+    </div>
+</div>
+
+<div class="requests-container animate-fade-in" style="animation-delay: 0.1s">
+    {% if not requests %}
+    <div class="empty-state glass">
+        <div class="empty-icon">📦</div>
+        <h2>{{ t('mng.empty_title') }}</h2>
+        <p>{{ t('mng.empty_desc') }}</p>
+    </div>
+    {% else %}
+    <div class="requests-list">
+        {% for request in requests %}
+        <div class="request-card glass premium-shadow">
+            <div class="request-header">
+                <div class="request-id-group">
+                    <span class="request-label">{{ t('hist.order') }} #{{ request.id }}</span>
+                    <h3 class="user-name">{{ request.user_name }}</h3>
+                </div>
+                <div class="status-badge {{ request.status }}">
+                    {{ request.status|title }}
+                </div>
+            </div>
+            
+            <div class="request-grid">
+                <div class="grid-item">
+                    <span class="item-label">{{ t('hist.submitted') }}</span>
+                    <span class="item-value">{{ request.date }}</span>
+                </div>
+                <div class="grid-item">
+                    <span class="item-label">{{ t('mng.loc') }}</span>
+                    <span class="item-value">{{ request.collection_point }}</span>
+                </div>
+                <div class="grid-item">
+                    <span class="item-label">{{ t('mng.dev_count') }}</span>
+                    <span class="item-value">{{ request.device_count }} {{ t('hist.items') }}</span>
+                </div>
+            </div>
+
+            <div class="request-actions">
+                <a href="{{ url_for('company.request_details_company', request_id=request.id) }}" class="btn-premium sm">
+                    {{ t('mng.mng_ord') }}
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .dashboard-header { margin-bottom: 2.5rem; }
+    .dashboard-header h1 { font-size: 2rem; font-weight: 800; }
+
+    .empty-state { text-align: center; padding: 5rem 2rem; border-radius: var(--radius-xl); }
+    .empty-icon { font-size: 4rem; margin-bottom: 1.5rem; }
+
+    .requests-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .request-card { padding: 2rem; border-radius: var(--radius-lg); transition: transform 0.3s; }
+    .request-card:hover { transform: scale(1.01); }
+
+    .request-header {
+        display: flex; justify-content: space-between; align-items: flex-start;
+        margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #f1f5f9;
+    }
+    .request-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.1em; }
+    .user-name { font-size: 1.25rem; font-weight: 700; margin-top: 0.25rem; }
+
+    .status-badge { padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+    .status-badge.received { background: #dbeafe; color: #1e40af; }
+    .status-badge.under-recycling { background: #fef3c7; color: #92400e; }
+    .status-badge.recycled { background: #dcfce7; color: #166534; }
+
+    .request-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
+    .item-label { display: block; font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 0.25rem; }
+    .item-value { font-weight: 600; color: var(--text-main); }
+
+    .btn-premium.sm { padding: 0.6rem 1.25rem; font-size: 0.875rem; }
+</style>
+{% endblock %}

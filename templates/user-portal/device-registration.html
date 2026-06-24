@@ -1,0 +1,358 @@
+{% extends "user-portal/base-user.html" %}
+
+{% block title %}New Request - GreenTec{% endblock %}
+
+{% block back_button %}
+<nav class="page-back-nav">
+    <a href="{{ url_for('user.user_home') }}" class="btn-back" onclick="if(history.length>1){history.back();return false;}">
+        <span class="back-arrow">&#8592;</span>
+        {{ t('nav.back') }}
+    </a>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header animate-fade-in">
+    <div class="header-main">
+        <h1>{{ t('req.title') }}</h1>
+        <p class="text-muted">{{ t('req.desc') }}</p>
+    </div>
+</div>
+
+<div class="order-container animate-fade-in" style="animation-delay: 0.1s">
+    <!-- Premium Stepper -->
+    <div class="stepper-wrapper glass">
+        <div class="stepper">
+            <div class="step {% if selected_company_id %}completed{% else %}active{% endif %}" id="step1">
+                <div class="step-circle">1</div>
+                <span class="step-label">Company</span>
+            </div>
+            <div class="step {% if not selected_company_id %}pending{% elif points %}active{% endif %}" id="step2">
+                <div class="step-circle">2</div>
+                <span class="step-label">Point</span>
+            </div>
+            <div class="step pending" id="step3">
+                <div class="step-circle">3</div>
+                <span class="step-label">Devices</span>
+            </div>
+            <div class="stepper-line">
+                <div class="stepper-progress" id="stepperProgress"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-card glass premium-shadow">
+        {% if error %}
+        <div class="error-box">{{ error }}</div>
+        {% endif %}
+
+        <!-- Step 1: Select Company -->
+        <div class="step-section">
+            <h2 class="section-title">{{ t('req.step1') }}</h2>
+            <form method="GET" action="{{ url_for('user.device_registration') }}">
+                <div class="form-group">
+                    <select name="company_id" class="form-select-premium" onchange="this.form.submit()">
+                        <option value="">{{ t('req.company_ph') }}</option>
+                        {% for company in companies %}
+                        <option value="{{ company.company_id }}" {% if selected_company_id == company.company_id %}selected{% endif %}>
+                            {{ company.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+
+<!-- Leaflet Map Modal (hidden by default) -->
+<div id="location-modal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center;">
+    <div class="modal-content" style="background:white; padding:1rem; border-radius:8px; width:90%; max-width:500px; height:80%; position:relative;">
+        <button type="button" id="close-modal" class="btn-outline" style="position:absolute; top:0.5rem; right:0.5rem;">&times;</button>
+        <div id="map" style="width:100%; height:100%;"></div>
+    </div>
+</div>
+
+<!-- Leaflet CSS/JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-sA+e2j9M8LkzG+0W1b7rK1cZ7XcG3Zr0L5g1j1Y5VQo=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-oY6A6yJ2d3b1c9wLQZbKk2v1+6Zt+eM3Zk5jD2J6x6g=" crossorigin=""></script>
+<script>
+document.getElementById('select-location-btn').addEventListener('click', function(){
+    document.getElementById('location-modal').style.display = 'flex';
+    initMap();
+});
+document.getElementById('close-modal').addEventListener('click', function(){
+    document.getElementById('location-modal').style.display = 'none';
+});
+let map, marker;
+function initMap(){
+    if(map){return;}
+    map = L.map('map').fitWorld();
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    map.on('locationfound', onLocationFound);
+    map.on('click', onMapClick);
+    map.locate({setView:true, maxZoom:16});
+}
+function onLocationFound(e){
+    if(!marker){
+        marker = L.marker(e.latlng, {draggable:true}).addTo(map);
+        marker.on('dragend', updatePosition);
+    }
+    updatePosition({latlng:e.latlng});
+}
+function onMapClick(e){
+    if(!marker){
+        marker = L.marker(e.latlng, {draggable:true}).addTo(map);
+        marker.on('dragend', updatePosition);
+    }
+    updatePosition(e);
+}
+function updatePosition(e){
+    const lat = e.latlng.lat.toFixed(6);
+    const lng = e.latlng.lng.toFixed(6);
+    document.getElementById('latitude').value = lat;
+    document.getElementById('longitude').value = lng;
+    // Simple reverse‑geocode via Nominatim (no API key)
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+        .then(res=>res.json())
+        .then(data=>{ document.getElementById('address').value = data.display_name || '' })
+        .catch(()=>{document.getElementById('address').value = ''});
+}
+</script>
+        </div>
+
+        {% if selected_company_id %}
+            {% if points %}
+            <form method="POST" action="{{ url_for('user.device_registration') }}" class="mt-8">
+                <input type="hidden" name="company_id" value="{{ selected_company_id }}" />
+
+                <!-- Step 2: Select Point -->
+                <div class="step-section">
+                    <h2 class="section-title">{{ t('req.step2') }}</h2>
+                    <div class="form-group">
+                        <select name="point_id" class="form-select-premium" required>
+                            <option value="">{{ t('req.point_ph') }}</option>
+                            {% for point in points %}
+                            <option value="{{ point.point_id }}">{{ point.location }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- AI Assistant Panel -->
+                <div class="ai-panel glass premium-shadow mb-8">
+                    <div class="ai-header">
+                        <h3>🤖 {{ t('ai.title') }}</h3>
+                        <p>{{ t('ai.desc') }}</p>
+                    </div>
+                    <div class="ai-body">
+                        <div class="ai-input-group">
+                            <input type="text" id="aiDeviceInput" class="form-input-premium" placeholder="{{ t('ai.input_ph') }}" />
+                            <button type="button" class="btn-premium" onclick="classifyDevice()">{{ t('ai.btn') }}</button>
+                        </div>
+                        <div id="aiResult" class="ai-result hidden">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Devices -->
+                <div class="step-section">
+                    <h2 class="section-title">{{ t('req.step3') }}</h2>
+                    <div class="device-row">
+                        <div class="form-group flex-2">
+                            <label>{{ t('req.dev_type') }}</label>
+                            <select name="device_type[]" id="deviceTypeSelect" class="form-select-premium" required>
+                                <option value="Mobile">Mobile</option>
+                                <option value="Laptop">Laptop</option>
+                                <option value="Tablet">Tablet</option>
+                                <option value="Desktop">Desktop</option>
+                                <option value="TV">TV</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label>{{ t('req.dev_qty') }}</label>
+                            <input type="number" name="quantity[]" value="1" min="1" class="form-input-premium" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>{{ t('req.dev_cond') }}</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="condition[]" value="Working" checked />
+                                <span>{{ t('req.working') }}</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="condition[]" value="Not Working" />
+                                <span>{{ t('req.not_working') }}</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-premium lg w-full">{{ t('req.submit') }}</button>
+                </div>
+            </form>
+            {% else %}
+            <div class="info-box">{{ t('req.no_points') }}</div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .order-container { max-width: 800px; margin: 0 auto; }
+    
+    .stepper-wrapper { padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 2rem; }
+    .stepper { display: flex; justify-content: space-between; position: relative; }
+    .step { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; z-index: 1; position: relative; width: 80px; }
+    .step-circle { 
+        width: 40px; height: 40px; border-radius: 50%; background: white; border: 2px solid #e2e8f0;
+        display: flex; align-items: center; justify-content: center; font-weight: 700; transition: all 0.3s;
+    }
+    .step.active .step-circle { border-color: var(--primary); color: var(--primary); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
+    .step.completed .step-circle { background: var(--primary); border-color: var(--primary); color: white; }
+    .step.pending .step-circle { color: #cbd5e1; }
+    .step-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+
+    .stepper-line { position: absolute; top: 20px; left: 40px; right: 40px; height: 2px; background: #e2e8f0; z-index: 0; }
+    .stepper-progress { height: 100%; background: var(--primary); width: 0%; transition: width 0.5s ease; }
+
+    .form-card { padding: 3rem; border-radius: var(--radius-xl); }
+    .section-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text-main); }
+    .step-section { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid #f1f5f9; }
+    .step-section:last-of-type { border-bottom: none; }
+
+    .form-select-premium, .form-input-premium {
+        width: 100%; padding: 1rem; border-radius: var(--radius-md); border: 2px solid #f1f5f9; background: #f8fafc;
+        font-weight: 500; appearance: none; transition: all 0.3s;
+    }
+    .form-select-premium:focus, .form-input-premium:focus { outline: none; border-color: var(--primary); background: white; }
+    
+    .device-row { display: flex; gap: 1rem; margin-bottom: 1rem; }
+    .flex-2 { flex: 2; }
+    .flex-1 { flex: 1; }
+
+    .radio-group { display: flex; gap: 1rem; }
+    .radio-item {
+        flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+        padding: 1rem; border: 2px solid #f1f5f9; border-radius: var(--radius-md); cursor: pointer; transition: all 0.3s;
+    }
+    .radio-item:has(input:checked) { border-color: var(--primary); background: var(--green-50); color: var(--primary-dark); font-weight: 600; }
+    .radio-item input { display: none; }
+
+    .error-box { padding: 1rem; background: #fee2e2; color: #ef4444; border-radius: var(--radius-md); margin-bottom: 2rem; font-weight: 600; }
+    .info-box { padding: 2rem; background: #f8fafc; border-radius: var(--radius-md); text-align: center; color: var(--text-muted); }
+    
+    /* AI Panel */
+    .ai-panel { padding: 2rem; border-radius: var(--radius-lg); background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%); margin-bottom: 2rem; border-left: 4px solid var(--primary); }
+    .ai-header h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem; color: var(--primary-dark); }
+    .ai-header p { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+    .ai-input-group { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+    .ai-input-group input { flex: 1; }
+    .ai-result { padding: 1.5rem; background: #f1f5f9; border-radius: var(--radius-md); font-size: 0.875rem; }
+    .ai-result.hidden { display: none; }
+    .ai-meta { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .ai-badge { padding: 0.25rem 0.75rem; border-radius: 999px; background: white; font-weight: 600; font-size: 0.8rem; box-shadow: var(--shadow-sm); }
+    .ai-badge.success { color: var(--green-600); }
+    .ai-reason { font-style: italic; color: var(--text-muted); margin-bottom: 1rem; }
+    .ai-tips { background: white; padding: 1rem; border-radius: var(--radius-md); }
+    .ai-tips ul { list-style: none; padding: 0; margin: 0; }
+    .ai-tips li { margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative; }
+    .ai-tips li::before { content: '✨'; position: absolute; left: 0; }
+    [dir="rtl"] .ai-tips li { padding-left: 0; padding-right: 1.5rem; }
+    [dir="rtl"] .ai-tips li::before { left: auto; right: 0; }
+    
+    .mt-8 { margin-top: 2rem; }
+    .w-full { width: 100%; justify-content: center; }
+</style>
+
+<script>
+    function updateProgress() {
+        let progress = 0;
+        const company = document.querySelector('[name="company_id"]');
+        const point = document.querySelector('[name="point_id"]');
+        
+        if(company && company.value) progress = 50;
+        if(point && point.value) progress = 100;
+        
+        const progEl = document.getElementById('stepperProgress');
+        if(progEl) progEl.style.width = progress + '%';
+    }
+    document.addEventListener('change', updateProgress);
+    window.onload = updateProgress;
+
+    async function classifyDevice() {
+        const input = document.getElementById('aiDeviceInput').value;
+        if(!input) return;
+
+        const btn = document.querySelector('.ai-input-group button');
+        const originalText = btn.innerText;
+        btn.innerText = "{{ t('ai.detecting') }}";
+        btn.disabled = true;
+
+        try {
+            const res = await fetch("{{ url_for('ai.classify') }}", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ device_name: input })
+            });
+            const data = await res.json();
+            
+            // Get recommendations too
+            const cond = document.querySelector('input[name="condition[]"]:checked').value;
+            const recRes = await fetch("{{ url_for('ai.recommend') }}", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ device_type: data.category, condition: cond })
+            });
+            const recData = await recRes.json();
+            
+            const isAr = "{{ lang }}" === "ar";
+            const reason = isAr ? data.reason_ar : data.reason_en;
+
+            const html = `
+                <div class="ai-meta">
+                    <span class="ai-badge">${data.icon} <b>{{ t('ai.detected') }}</b> ${data.category}</span>
+                    <span class="ai-badge ${data.recyclable ? 'success' : ''}"><b>{{ t('ai.recyclability') }}</b> ${data.recyclable ? 'Yes' : 'No'}</span>
+                    <span class="ai-badge"><b>{{ t('ai.rate') }}</b> ${data.recycle_rate}%</span>
+                </div>
+                <div class="ai-reason">${reason}</div>
+                
+                <div class="ai-tips">
+                    <strong>💡 {{ t('ai.tips') }}</strong>
+                    <ul class="mt-2">
+                        ${recData.recommendations.map(r => `<li>${r}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="mt-4 text-right">
+                    <button type="button" class="btn-outline sm" onclick="autofill('${data.category}')">
+                        ✨ {{ t('ai.autofill') }}
+                    </button>
+                </div>
+            `;
+            
+            const resultDiv = document.getElementById('aiResult');
+            resultDiv.innerHTML = html;
+            resultDiv.classList.remove('hidden');
+        } catch(e) {
+            console.error(e);
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+    }
+
+    function autofill(category) {
+        const select = document.getElementById('deviceTypeSelect');
+        if(select) {
+            select.value = category;
+        }
+    }
+</script>
+{% endblock %}

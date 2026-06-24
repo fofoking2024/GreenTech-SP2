@@ -1,0 +1,86 @@
+{% extends "company-portal/base-company.html" %}
+
+{% block title %}{{ t('rep.title') }} - GreenTec{% endblock %}
+
+{% block back_button %}
+<nav class="page-back-nav">
+    <a href="{{ url_for('company.company_home') }}" class="btn-back" onclick="if(history.length>1){history.back();return false;}">
+        <span class="back-arrow">&#8592;</span>
+        {{ t('nav.back') }}
+    </a>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-header animate-fade-in">
+    <div class="header-main">
+        <h1>{{ t('rep.title') }}</h1>
+        <p class="text-muted">{{ t('rep.desc') }}</p>
+    </div>
+</div>
+
+<div class="reports-container animate-fade-in" style="animation-delay: 0.1s">
+    <div class="report-card glass premium-shadow">
+        <div class="report-icon">📄</div>
+        <h2 class="brand-font">Generate New Report</h2>
+        <p class="text-muted">Select the time period for the performance data you wish to download.</p>
+        
+        <form class="report-form" method="POST" action="{{ url_for('reports.download_report') }}">
+            <div class="form-group">
+                <label>{{ t('rep.sel_period') }}</label>
+                <div class="period-options">
+                    <label class="radio-card">
+                        <input type="radio" name="period" value="monthly" checked>
+                        <div class="card-content">
+                            <span class="icon">📅</span>
+                            <h4>{{ t('rep.monthly') }}</h4>
+                        </div>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="period" value="quarterly">
+                        <div class="card-content">
+                            <span class="icon">📊</span>
+                            <h4>{{ t('rep.quarterly') }}</h4>
+                        </div>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="period" value="annual">
+                        <div class="card-content">
+                            <span class="icon">📈</span>
+                            <h4>{{ t('rep.annual') }}</h4>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-premium lg w-full">
+                <span class="btn-icon">⬇️</span> {{ t('rep.btn_gen') }}
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .reports-container { max-width: 700px; margin: 0 auto; }
+    .report-card { padding: 4rem; border-radius: var(--radius-xl); text-align: center; }
+    .report-icon { font-size: 3.5rem; margin-bottom: 1.5rem; }
+    .report-card h2 { font-size: 2rem; margin-bottom: 1rem; }
+    .report-card p { margin-bottom: 3rem; }
+
+    .period-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 3rem; }
+    .period-option { cursor: pointer; }
+    .period-option input { display: none; }
+    .option-content {
+        padding: 1.5rem 1rem; border: 2px solid #f1f5f9; border-radius: var(--radius-lg);
+        transition: all 0.3s; background: #f8fafc;
+    }
+    .option-content .title { display: block; font-weight: 700; margin-bottom: 0.25rem; }
+    .option-content .desc { font-size: 0.75rem; color: var(--text-muted); }
+    
+    .period-option input:checked + .option-content {
+        border-color: var(--primary); background: var(--green-50); transform: translateY(-5px);
+    }
+    
+    .w-full { width: 100%; justify-content: center; }
+</style>
+{% endblock %}

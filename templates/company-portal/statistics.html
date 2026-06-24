@@ -1,0 +1,207 @@
+{% extends "company-portal/base-company.html" %}
+
+{% block title %}Statistics - GreenTec{% endblock %}
+
+{% block back_button %}
+<nav class="page-back-nav">
+    <a href="{{ url_for('company.company_home') }}" class="btn-back" onclick="if(history.length>1){history.back();return false;}">
+        <span class="back-arrow">&#8592;</span>
+        {{ t('nav.back') }}
+    </a>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header animate-fade-in">
+    <div class="header-main">
+        <h1>{{ t('stat.title') }}</h1>
+        <p class="text-muted">{{ t('stat.desc') }}</p>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="stats-grid animate-fade-in" style="animation-delay: 0.1s">
+    <div class="stat-card glass premium-shadow">
+        <div class="stat-info">
+            <span class="stat-value text-primary">{{ total_requests }}</span>
+            <span class="stat-label">{{ t('stat.reqs') }}</span>
+        </div>
+    </div>
+    <div class="stat-card glass premium-shadow">
+        <div class="stat-info">
+            <span class="stat-value text-green">{{ devices_recycled }}</span>
+            <span class="stat-label">{{ t('stat.items_rec') }}</span>
+        </div>
+    </div>
+    <div class="stat-card glass premium-shadow">
+        <div class="stat-info">
+            <span class="stat-value text-purple">
+                {% if total_requests > 0 %}
+                {{ ((completed_orders / total_requests) * 100)|round(1) }}
+                {% else %}
+                0
+                {% endif %}%
+            </span>
+            <span class="stat-label">{{ t('stat.comp_rate') }}</span>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Grid -->
+<div class="charts-grid animate-fade-in" style="animation-delay: 0.2s">
+    <!-- Status Distribution -->
+    <div class="chart-card glass premium-shadow">
+        <div class="card-header">
+            <h3>{{ t('stat.chart1') }}</h3>
+        </div>
+        <div class="chart-container">
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Device Types -->
+    <div class="chart-card glass premium-shadow">
+        <div class="card-header">
+            <h3>{{ t('stat.chart2') }}</h3>
+        </div>
+        <div class="chart-container">
+            <canvas id="deviceChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard-header {
+        margin-bottom: 2rem;
+    }
+
+    .stats-overview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .stat-mini-card {
+        padding: 1.5rem;
+        border-radius: var(--radius-md);
+        text-align: center;
+    }
+
+    .stat-mini-card .label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-mini-card .value {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+        gap: 3rem;
+        margin-bottom: 4rem;
+    }
+
+    .chart-container {
+        padding: 2.5rem;
+        border-radius: var(--radius-lg);
+        overflow: visible;
+        /* Changed to visible to debug but will keep containers contained */
+        display: flex;
+        flex-direction: column;
+        height: auto !important;
+        /* OVERRIDE fixed height from company.css */
+        min-height: 500px;
+    }
+
+    .chart-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        color: var(--text-main);
+    }
+
+    .canvas-wrapper {
+        position: relative;
+        height: 350px;
+        width: 100%;
+        flex: 1;
+    }
+
+    @media (max-width: 1000px) {
+        .charts-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .canvas-wrapper {
+            height: 300px;
+        }
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctxStatus = document.getElementById('statusChart').getContext('2d');
+    new Chart(ctxStatus, {
+        type: 'doughnut',
+        data: {
+            labels: {{ labels| safe }},
+        datasets: [{
+            data: {{ data| safe }},
+        backgroundColor: ['#3b82f6', '#f59e0b', '#10b981'],
+        borderWidth: 0,
+        hoverOffset: 10
+            }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20, font: { weight: '600' } } }
+        },
+        cutout: '70%',
+        layout: {
+            padding: {
+                bottom: 20
+            }
+        }
+    }
+    });
+
+    const ctxDevice = document.getElementById('deviceChart').getContext('2d');
+    new Chart(ctxDevice, {
+        type: 'bar',
+        data: {
+            labels: {{ device_type_labels| safe }},
+        datasets: [{
+            label: 'Quantity',
+            data: {{ device_type_data| safe }},
+        backgroundColor: '#10b981',
+        borderRadius: 8,
+        barThickness: 30
+            }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            y: { beginAtZero: true, grid: { display: false }, ticks: { font: { weight: '600' } } },
+            x: { grid: { display: false }, ticks: { font: { weight: '600' }, maxRotation: 45, minRotation: 45 } }
+        }
+    }
+    });
+</script>
+{% endblock %}

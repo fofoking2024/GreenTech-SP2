@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ dir }}">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenTec - Sustainable E-Waste Management</title>
+    <meta name="description" content="Connect with certified e-waste recycling centers. Submit devices, track requests, and find collection points near you" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/design-system.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/rtl.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" />
+</head>
+
+<body class="bg-main">
+    
+    <nav class="main-nav glass">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img src="{{ url_for('static', filename='icons/logo-green-icon.svg') }}" alt="GreenTec" class="nav-logo" />
+                <span class="brand-font">GreenTec</span>
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('tutorial') }}" class="btn-outline sm">Tutorial / How it works</a>
+                {% if lang == 'en' %}
+                    <a href="{{ url_for('set_language', lang='ar') }}" class="btn-outline sm" style="border:none">🇸🇦 العربية</a>
+                {% else %}
+                    <a href="{{ url_for('set_language', lang='en') }}" class="btn-outline sm" style="border:none">🇬🇧 English</a>
+                {% endif %}
+                <a href="{{ url_for('auth.user_login') }}" class="btn-outline sm">{{ t('nav.user_portal') }}</a>
+                <a href="{{ url_for('auth.company_login') }}" class="btn-premium sm">{{ t('nav.company_portal') }}</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="hero-content animate-fade-in">
+            <h1 class="brand-font">{{ t('idx.title') }} <br/><span class="text-primary">{{ t('idx.title_sp') }}</span></h1>
+            <p class="hero-subtitle">{{ t('idx.sub') }}</p>
+            <div class="hero-actions">
+                <a href="{{ url_for('auth.user_reg') }}" class="btn-premium lg">
+                    {{ t('idx.btn_usr') }}
+                    <span class="arrow">→</span>
+                </a>
+                <a href="{{ url_for('auth.company_reg') }}" class="btn-outline lg">
+                    {{ t('idx.btn_cmp') }}
+                </a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <!-- Background element or illustration could go here -->
+        </div>
+    </section>
+
+    <div class="features-section">
+        <div class="container">
+            <h2 class="section-title text-center">{{ t('idx.why') }}</h2>
+            <div class="features-grid">
+                <div class="feature-card glass premium-shadow">
+                    <div class="feature-icon bg-green-light">♻️</div>
+                    <h3>{{ t('idx.f1_title') }}</h3>
+                    <p>{{ t('idx.f1_desc') }}</p>
+                </div>
+                <div class="feature-card glass premium-shadow">
+                    <div class="feature-icon bg-blue-light">🏢</div>
+                    <h3>{{ t('idx.f2_title') }}</h3>
+                    <p>{{ t('idx.f2_desc') }}</p>
+                </div>
+                <div class="feature-card glass premium-shadow">
+                    <div class="feature-icon bg-orange-light">🌍</div>
+                    <h3>{{ t('idx.f3_title') }}</h3>
+                    <p>{{ t('idx.f3_desc') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer bg-dark">
+        <div class="footer-container">
+            <img src="{{ url_for('static', filename='icons/logo-white-icon.svg') }}" alt="GreenTec" class="footer-logo" />
+            <p class="footer-text">Making the world a greener place, one device at a time.</p>
+            <div class="footer-links">
+                &copy; 2026 GreenTec. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+        .main-nav { position: fixed; width: 100%; top: 0; z-index: 1000; }
+        .nav-brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 1.25rem; color: var(--primary); }
+        .nav-logo { height: 32px; }
+        .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+        .nav-link { text-decoration: none; color: var(--text-main); font-weight: 500; }
+        
+        .hero-section {
+            padding-top: 10rem;
+            padding-bottom: 6rem;
+            text-align: center;
+            background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--green-100);
+            color: var(--primary-dark);
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .hero-title { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; color: var(--bg-dark); }
+        .text-primary { color: var(--primary); }
+        .hero-subtitle { max-width: 600px; margin: 0 auto 2.5rem; font-size: 1.125rem; color: var(--text-muted); }
+        .cta-group { display: flex; justify-content: center; gap: 1rem; }
+        
+        .btn-outline {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-outline:hover { background: var(--green-50); }
+        .lg { padding: 1rem 2rem; font-size: 1.1rem; }
+
+        .section-title { font-size: 2.5rem; text-align: center; margin-bottom: 4rem; font-weight: 700; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; padding: 0 2rem 6rem; }
+        .feature-card { padding: 3rem 2rem; background: white; border-radius: var(--radius-lg); text-align: center; transition: all 0.3s; }
+        .feature-card:hover { transform: translateY(-10px); }
+        .icon-box { width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
+        .icon-box img { width: 32px; height: 32px; }
+        .icon-box.green { background: #dcfce7; }
+        .icon-box.blue { background: #dbeafe; }
+        .icon-box.gold { background: #fef3c7; }
+        
+        .footer { padding: 4rem 2rem; color: white; text-align: center; }
+        .footer-logo { height: 40px; margin-bottom: 1.5rem; }
+        .footer-text { margin-bottom: 2rem; opacity: 0.7; }
+        
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .nav-links { display: none; }
+            .cta-group { flex-direction: column; }
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ dir }}">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GreenTec Company{% endblock %}</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/design-system.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/company.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/rtl.css') }}" />
+    
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="bg-main">
+
+    <nav class="user-nav glass">
+        <div class="nav-container">
+            <a href="{{ url_for('company.company_home') }}" class="user-nav-brand">
+                <img src="{{ url_for('static', filename='icons/logo-green-icon.svg') }}" alt="GreenTec" class="user-nav-logo" />
+                <span class="brand-font">GreenTec <small>Company</small></span>
+            </a>
+
+            <ul class="user-nav-links">
+                <li><a href="{{ url_for('company.company_home') }}" class="nav-item">{{ t('nav.dashboard') }}</a></li>
+                <li><a href="{{ url_for('company.recycling_requests') }}" class="nav-item">{{ t('nav.orders') }}</a></li>
+                <li><a href="{{ url_for('company.collection_points') }}" class="nav-item">{{ t('nav.points') }}</a></li>
+                <li><a href="{{ url_for('company.statistics') }}" class="nav-item">{{ t('nav.stats') }}</a></li>
+                <li><a href="{{ url_for('reports.reports') }}" class="nav-item">{{ t('nav.reports') }}</a></li>
+                <li class="nav-separator"></li>
+                <li>
+                    {% if lang == 'en' %}
+                        <a href="{{ url_for('set_language', lang='ar') }}" class="nav-item" style="font-weight: 700;">🇸🇦 العربية</a>
+                    {% else %}
+                        <a href="{{ url_for('set_language', lang='en') }}" class="nav-item" style="font-weight: 700;">🇬🇧 English</a>
+                    {% endif %}
+                </li>
+                <li>
+                    <a href="{{ url_for('auth.company_logout') }}" class="logout-btn">
+                        <img src="{{ url_for('static', filename='icons/logout-icon.svg') }}" alt="logout" />
+                        <span>{{ t('nav.logout') }}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for category, message in messages %}
+            <div class="flash-toast {{ category }} animate-fade-in">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <main class="user-main animate-fade-in">
+        <div class="content-container">
+            {% block back_button %}{% endblock %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <style>
+        .nav-container, .content-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem; /* Added 4rem bottom padding */
+        }
+
+        .user-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .user-nav-brand small {
+            font-size: 0.8rem;
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 5px;
+        }
+
+        .user-nav-logo { height: 40px; }
+
+        .user-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-item:hover { color: var(--primary); }
+
+        .nav-separator {
+            width: 1px;
+            height: 24px;
+            background: #e2e8f0;
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #ef4444;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover { background: #fee2e2; }
+
+        .flash-container {
+            position: fixed;
+            top: 5rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .flash-toast {
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
+            background: white;
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--primary);
+            font-weight: 500;
+        }
+
+        .flash-toast.error { border-left-color: #ef4444; }
+    </style>
+
+    <script>
+        setTimeout(() => {
+            document.querySelectorAll('.flash-toast').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateX(20px)';
+                setTimeout(() => el.remove(), 300);
+            });
+        }, 5000);
+    </script>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>
