@@ -41,7 +41,7 @@ Visual verification showing the terminal state of a specific request, mapping th
 
 ### 7. Corporate Administrative Control Panel
 The master dashboard for certified companies, offering centralized management vectors for active drop-off logistics, request processing, interactive tools, and data reporting.
-![Company Dashboard](./static/images/Screenshot%202026-06-27%20232311.png)
+![Company Dashboard](./Screenshot 2026-06-27 232311.png)
 
 ### 8. Statistical Data Visualization & Analytics Engine
 An analytical dashboard rendering distribution metrics via Chart.js, visualizing status ratios through pie charts and tracking electronic categories using progressive bar charts.
