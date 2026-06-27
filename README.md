@@ -11,42 +11,43 @@ GreenTech is a full-stack web platform for electronic waste (e-waste) management
 
 ### 1. System Landing Page (Main Interface)
 The main landing page serves as the primary gateway, presenting the platform's core mission, dual-portal entry points (User vs. Company), and bilingual switching capabilities to maximize public engagement.
-![Main Landing Page](static/images/Screenshot%202026-06-27%20231428.png)
+<img src="static/images/Screenshot 2026-06-27 231428.png" alt="Main Landing Page" width="100%"/>
 
 ### 2. Secure Authentication Portal
 A unified, role-based secure login interface enforcing cryptographic credential validation via Werkzeug to guarantee robust access control parameters.
-![Login Page](static/images/Screenshot%202026-06-27%20231516.png)
+<img src="static/images/Screenshot 2026-06-27 231516.png" alt="Login Page" width="100%"/>
 
 ### 3. Streamlined Device Registration Pipeline
 A multi-tiered wizard form that allows individual users to intuitively catalog their electronic assets, input condition metrics, and initiate a recycling transaction.
-![Device Registration Page](static/images/Screenshot%202026-06-27%20231555.png)
+<img src="static/images/Screenshot 2026-06-27 231555.png" alt="Device Registration Page" width="100%"/>
 
 ### 4. Comprehensive Request Details & Asset Diagnostics
 A granular look into the submitted transaction, detailing asset specifications, historical lifecycle tracking, and device diagnostics under review.
 #### Part I: Asset Specifications
-![Request Details Part 1](static/images/Screenshot%202026-06-27%20231836.png)
+<img src="static/images/Screenshot 2026-06-27 231836.png" alt="Request Details Part 1" width="100%"/>
+
 #### Part II: Evaluation Metrics & Logistics
-![Request Details Part 2](static/images/Screenshot%202026-06-27%20231802.png)
+<img src="static/images/Screenshot 2026-06-27 231802.png" alt="Request Details Part 2" width="100%"/>
 
 ### 5. Automated System Notifications & Timeline Logs
 An automated state-machine logger providing real-time notification alerts and transparency milestones regarding the status of pending user submissions.
-![Order Notifications](static/images/Screenshot%202026-06-27%20232404.png)
+<img src="static/images/Screenshot 2026-06-27 232404.png" alt="Order Notifications" width="100%"/>
 
 ### 6. Order Lifecycle State: Transition to 'Recycled'
 Visual verification showing the terminal state of a specific request, mapping the transition tracking from initial submission to the final eco-friendly `Recycled` milestone.
-![Recycled State](static/images/Screenshot%202026-06-27%20232418.png)
+<img src="static/images/Screenshot 2026-06-27 232418.png" alt="Recycled State" width="100%"/>
 
 ### 7. Corporate Administrative Control Panel
 The master dashboard for certified companies, offering centralized management vectors for active drop-off logistics, request processing, interactive tools, and data reporting.
-![Company Dashboard](static/images/Screenshot%202026-06-27%20232311.png)
+<img src="static/images/Screenshot 2026-06-27 232311.png" alt="Company Dashboard" width="100%"/>
 
 ### 8. Statistical Data Visualization & Analytics Engine
 An analytical dashboard rendering distribution metrics via Chart.js, visualizing status ratios through pie charts and tracking electronic categories using progressive bar charts.
-![Statistical Analytics](static/images/Screenshot%202026-06-27%20232528.png)
+<img src="static/images/Screenshot 2026-06-27 232528.png" alt="Statistical Analytics" width="100%"/>
 
 ### 9. PDF Report Generation & Compliance Export
 An integrated document compilation system leveraging ReportLab to build and export institutional-grade, formal data reports for external compliance bodies.
-![Report Generation](static/images/Screenshot%202026-06-27%20232631.png)
+<img src="static/images/Screenshot 2026-06-27 232631.png" alt="Report Generation" width="100%"/>
 
 ## ✨ Key Features
 
