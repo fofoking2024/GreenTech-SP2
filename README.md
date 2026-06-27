@@ -9,47 +9,49 @@ GreenTech is a full-stack web platform for electronic waste (e-waste) management
 
 ## 🖼️ System Interface & Visual Walkthrough
 
+## 🖼️ System Interface & Visual Walkthrough
 
 ### 1. System Landing Page (Main Interface)
 The main landing page serves as the primary gateway, presenting the platform's core mission, dual-portal entry points (User vs. Company), and bilingual switching capabilities to maximize public engagement.
-![Main Landing Page](https://raw.githubusercontent.com/fofoking2024/GreenTech-SP2/main/static/images/Screenshot%202026-06-27%20231428.png)
+![Main Landing Page](./static/images/Screenshot%202026-06-27%20231428.png)
 
 ### 2. Secure Authentication Portal
 A unified, role-based secure login interface enforcing cryptographic credential validation via Werkzeug to guarantee robust access control parameters.
-![Login Page](https://raw.githubusercontent.com/fofoking2024/GreenTech-SP2/main/static/images/Screenshot%202026-06-27%20231516.png)
+![Login Page](./static/images/Screenshot%202026-06-27%20231516.png)
 
 ### 3. Streamlined Device Registration Pipeline
 A multi-tiered wizard form that allows individual users to intuitively catalog their electronic assets, input condition metrics, and initiate a recycling transaction.
-![Device Registration Page](https://raw.githubusercontent.com/fofoking2024/GreenTech-SP2/main/static/images/Screenshot%202026-06-27%20231555.png)
+![Device Registration Page](./static/images/Screenshot%202026-06-27%20231555.png)
 
 ### 4. Comprehensive Request Details & Asset Diagnostics
 A granular look into the submitted transaction, detailing asset specifications, historical lifecycle tracking, and device diagnostics under review.
 #### Part I: Asset Specifications
-![Request Details Part 1](https://raw.githubusercontent.com/fofoking2024/GreenTech-SP2/main/static/images/Screenshot%202026-06-27%20231836.png)
+![Request Details Part 1](./static/images/Screenshot%202026-06-27%20231836.png)
 
 #### Part II: Evaluation Metrics & Logistics
-![Request Details Part 2](https://raw.githubusercontent.com/fofoking2024/GreenTech-SP2/main/static/images/Screenshot%202026-06-27%20231802.png)
+![Request Details Part 2](./static/images/Screenshot%202026-06-27%20231802.png)
 
 ### 5. Automated System Notifications & Timeline Logs
 An automated state-machine logger providing real-time notification alerts and transparency milestones regarding the status of pending user submissions.
-![Order Notifications](https://raw.githubusercontent.com/fofoking2024/GreenTech-SP2/main/static/images/Screenshot%202026-06-27%20232404.png)
+![Order Notifications](./static/images/Screenshot%202026-06-27%20232404.png)
 
 ### 6. Order Lifecycle State: Transition to 'Recycled'
 Visual verification showing the terminal state of a specific request, mapping the transition tracking from initial submission to the final eco-friendly `Recycled` milestone.
-![Recycled State](https://raw.githubusercontent.com/fofoking2024/GreenTech-SP2/main/static/images/Screenshot%202026-06-27%20232418.png)
+![Recycled State](./static/images/Screenshot%202026-06-27%20232418.png)
 
 ### 7. Corporate Administrative Control Panel
 The master dashboard for certified companies, offering centralized management vectors for active drop-off logistics, request processing, interactive tools, and data reporting.
-![Company Dashboard](https://raw.githubusercontent.com/fofoking2024/GreenTech-SP2/main/static/images/Screenshot%202026-06-27%20232311.png)
+![Company Dashboard](./static/images/Screenshot%202026-06-27%20232311.png)
 
 ### 8. Statistical Data Visualization & Analytics Engine
 An analytical dashboard rendering distribution metrics via Chart.js, visualizing status ratios through pie charts and tracking electronic categories using progressive bar charts.
-![Statistical Analytics](https://raw.githubusercontent.com/fofoking2024/GreenTech-SP2/main/static/images/Screenshot%202026-06-27%20232528.png)
+![Statistical Analytics](./static/images/Screenshot%202026-06-27%20232528.png)
 
 ### 9. PDF Report Generation & Compliance Export
 An integrated document compilation system leveraging ReportLab to build and export institutional-grade, formal data reports for external compliance bodies.
-![Report Generation](https://raw.githubusercontent.com/fofoking2024/GreenTech-SP2/main/static/images/Screenshot%202026-06-27%20232631.png)
+![Report Generation](./static/images/Screenshot%202026-06-27%20232631.png)
 
+ 
 ## ✨ Key Features
 
 ### 🏢 For Certified Recycling Companies
