@@ -49,7 +49,7 @@ An analytical dashboard rendering distribution metrics via Chart.js, visualizing
 
 ### 9. PDF Report Generation & Compliance Export
 An integrated document compilation system leveraging ReportLab to build and export institutional-grade, formal data reports for external compliance bodies.
-![Report Generation](Screenshot%202026-06-27%20232631.png)
+![Report Generation](./Screenshot%202026-06-27%20232631.png)
 
  
 ## ✨ Key Features
