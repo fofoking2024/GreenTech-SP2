@@ -8,7 +8,7 @@ GreenTech is a comprehensive, bilingual (English & Arabic) web application desig
 GreenTech is a full-stack web platform for electronic waste (e-waste) management in Yemen. It connects **individual users** (citizens) with **certified recycling companies** to submit, track, and process recycling requests. This project addresses the local e-waste challenges, aligning with environmental sustainability goals and promoting a digital circular economy. The implementation matches 100% of the Senior Project II Report specifications, incorporating Agile methodologies, UML models, and 10 implemented Use Cases.
 
 ## 🖼️ System Interface & Visual Walkthrough
-
+ 
 ## 🖼️ System Interface & Visual Walkthrough
 
 ### 1. System Landing Page (Main Interface)
